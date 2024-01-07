@@ -2,6 +2,10 @@
 ## Intro:
 Polypy is meant to a be a small, straightfoward library that interfaces with the official **`Polygon.io`** Api. The library is currently in pre-alpha, as it lacks a complete configuration file of api endpoints to interface with. It currently only has core functionality surrounding _stock-options_ related endpoints configured. That being said, the core module **`data_access.py`** depends on _.yaml_ configuration files for all api endpoints (and other configs), and is coded in a way that makes adding functionality a matter of copy and paste (which will be done after unit testing this release's framework). The most important limitation is that the polygon.io api itself is _extremely_ limited unless you pay a subscription for premium data rates. The free data rate is 5 api calls/minute along with only previous day data available. This is far too slow for any high performance project, but would be fine albiet slow for backtesting. There is more information on these subjects below. Thanks for checking out the project!
 
+## **Table Of Contents:**
+1. Functions
+2. Configuration
+
 ## 1. Functions:
 This pre-alpha release has the functionality broken down into three classes within the **`data_access.py`** module. 
 1. **DataAccessToolkit** - Functions for parameter validation and loading data from configuration files into python objects.
@@ -119,5 +123,10 @@ The full class structure for the `data_access.py` module is as follows:
         + _data\_object_ - The dictionary object to write into the file. Should be a return value from either the `request_data()` or `sort_api_data()` functions, depending on whether you just want to write the raw response or not (could do both?).
         + _filename_ - The name of the file to be written.
         + NOTE: The `write_json()` function operates on the same arguments so we will skip it. 
+
+
+## Configuration:
+
+Configuration in polypy revolves around 3 included program files - _file\_paths.yaml_, _settings.yaml_ and _request\_parameters.yaml_. `file_paths.yaml` is the only one of these files that _can not_ move from the program's working directory. This file contains the file paths for _settings.yaml_, _request\_parameters.yaml_, the path to the directory in which you wish to export files and potentially any other file you may want to work into a program. Both of the other program files are by default stored in the program's working directory, but can be stored anywhere that is convenient for you. Simply update the appropriate file path in the _file\_paths.yaml_ file.
 
    
