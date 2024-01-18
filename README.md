@@ -121,7 +121,7 @@ The full class structure for the `data_access.py` module is as follows:
 
     + **write_yaml(write_file_dir: str, data_object: dict, filename: str) -> None:** - Exports a given data dictionary object to a .yaml file. Takes 3 arguments:
         + _write\_file\_dir_ - The directory in which to write the file into. Can be found in the `file_paths.yaml` file.
-        + _data\_object_ - The dictionary object to write into the file. Should be a return value from either the `request_data()` or `sort_api_data()` functions, depending on whether you just want to write the raw response or not (could do both?).
+        + _data\_object_ - The dictionary object to write into the file. Should be a return value from either the `request_data()` or `sort_api_data()` functions, depending on whether you just want to write the raw response or not (you could do both?).
         + _filename_ - The name of the file to be written.
         + NOTE: The `write_json()` function operates on the same arguments so we will skip it. 
 
@@ -141,7 +141,7 @@ program_files:
   settings: "path/to/settings.yaml"
 
 ```
-You probably want your files in a location that makes sense yo _you_. Simply move the files where you want them and copy the path to the appropriate entry in the file! Ensure that the file path is written/copied properly and is contained within the double `""` quotes.
+You probably want your files in a location that makes sense to _you_. Simply move the files where you want them and copy the path to the appropriate entry in the file! Ensure that the file path is written/copied properly and is contained within the double `""` quotes.
 
 The _settings.yaml_ file contains static program configuration values such as your api key. The default file is as follows:
 ```
