@@ -9,7 +9,7 @@ dependencies = [
   "PyYAML==6.0.1",
 ]
 name = "kunkel-polypy"
-version = "0.1.4"
+version = "0.1.5"
 authors = [
   { name="Branden Kunkel", email="kunkel.branden6130@gmail.com" },
 ]

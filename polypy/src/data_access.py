@@ -39,6 +39,24 @@ class DataAccessToolkit():
                     return False
         return True
     
+    def unix_to_date(self, unix_timestamp: int) -> str:
+        try:
+            if self.validate_parameters_exist(unix_timestamp) == True:
+                if self.validate_parameters_type(int, unix_timestamp) == True: 
+                    unit_conv = float(unix_timestamp / 1000)
+                    date_conv = str(datetime.utcfromtimestamp(unit_conv))
+                    return date_conv
+                else:
+                    raise AuthEx.InvalidParameterType(unix_timestamp, float, self.unix_to_date.__name__)
+            else:
+                raise AuthEx.EmptyParameter(self.unix_to_date.__name__)
+        except AuthEx.EmptyParameter as err:
+            print(err.error_msg())
+            return None
+        except AuthEx.InvalidParameterType as err:
+            print(err.error_msg())
+            return None  
+    
 
     def settings(self) -> dict:
         '''loads the program's settings file into a python dict'''
@@ -228,7 +246,7 @@ class ExportApiData():
     """class serves as an engine to export api data"""
 
     def sort_api_data(self, data_object: dict, request_url: str) -> dict:
-        '''Sorts and adds program stamp(s) to an API response from polygon.io'''
+        '''changes certain values to be human readable and adds program stamp(s) to an API response from polygon.io'''
         try:
             tools = DataAccessToolkit()
             p_group1 = [data_object, request_url]
@@ -256,12 +274,17 @@ class ExportApiData():
 
             timestamp_object = datetime.now()
             timestamp = str(timestamp_object)
-            req_url = request_url
             data = data_object
+            values_array = data["results"]["values"]
 
             data.update({"auto": {}})
             data["auto"]["auto_timestamp"] = timestamp 
-            data["auto"]["auto_url"] = req_url 
+            data["auto"]["auto_url"] = request_url 
+
+            for dict_entry in data["results"]["values"]:
+                for key in dict_entry:
+                    if key == "timestamp":
+                        dict_entry[key] = tools.unix_to_date(dict_entry[key])
 
             return data
 
@@ -271,6 +294,12 @@ class ExportApiData():
         except AuthEx.InvalidParameterType as err:
             print(err.error_msg())
             return None
+        except KeyError as err:
+            if "values" in err.args:
+                print("Warning: No values found in response!")
+                return data
+            else:
+                print("UNHANDLED ERROR!")
 
 
 
