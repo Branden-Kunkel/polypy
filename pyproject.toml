@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 dependencies = [
-  "requests==2.31",
-  "PyYAML==6.0",
+  "requests==2.31.0",
+  "PyYAML==6.0.1",
 ]
-name = "test10branden_polypy"
-version = "0.1"
+name = "kunkel-polypy"
+version = "0.1.0"
 authors = [
   { name="Branden Kunkel", email="kunkel.branden6130@gmail.com" },
 ]
