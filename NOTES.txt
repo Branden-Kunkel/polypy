@@ -1,4 +1,7 @@
-Notes for 'polypy'
+__Notes for 'polypy' repo__
 
-- Recently reminded myself that there is no error handling for a situation in which the program files are not .yaml.
+- Recently reminded myself that there is no error handling for a situation in which the program files are not .yaml. -> fix that
+
 - First goal after unit testing should be to add any remaining api endpoints to the program
+
+- need to add verbosity to the program as an option -> working on it. Need to add an if statement to guage whether to be verbose or not

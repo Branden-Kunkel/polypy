@@ -1,5 +1,11 @@
 ---
 
+# NOTES: 
+# 1. Only change the values under the 'parameters:' key in each endpoint. Changing any other values will break/crash the program.
+# 2. -ALL- values that are mutable (changeable) are to be of <string> type. In other words, put all values within the double "" quotes.
+# 3. If you do not want a value present at all, put the field as 'null'. 
+# 4. If a value is not a string or null, the program will simply give an error and return None, but will not break/crash.
+
 ################ ASSETS PARAMETERS #####################
 
 asset_parameters: 
@@ -56,10 +62,10 @@ macd:
 relative_strength_index: 
   url: "https://api.polygon.io/v1/indicators/rsi/{optionsTicker}?"
   parameters:
-    timestamp: null
+    timestamp: "2023-12-22"
     timespan: "day"
     adjusted: "true"
-    window: "14"
+    window: "50"
     series_type: "close"
     expand_underlying: "true"
     order: "desc"
@@ -77,18 +83,18 @@ ticker_v3:
 view_tickers: 
   url: "https://api.polygon.io/v3/reference/tickers?"
   parameters: 
-    ticker : null #string 
-    type : null #string
-    market : null #string
-    exchange : null #string
-    cusip : null #string
-    cik : null #string
-    date : null #string
-    search : null #string
-    active : "true" # string
-    order : "asc" #string
-    limit : "10" #string
-    sort : "ticker" #string
+    ticker : null  
+    type : null 
+    market : null 
+    exchange : null 
+    cusip : null 
+    cik : null 
+    date : null 
+    search : null 
+    active : "true" 
+    order : "asc" 
+    limit : "10" 
+    sort : "ticker" 
 
 
 options_contracts: 

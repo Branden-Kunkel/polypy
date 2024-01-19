@@ -62,6 +62,22 @@ class InvalidParameterType(Exception):
         return msg
     
 
+class InvalidParameter(Exception):
+    """Handles parameters that are invalid for another reason other than type or existence"""
+
+    def __init__(self, parameter, function):
+        self.parameter = parameter
+        self.function = function
+
+    def error_msg(self):
+
+        function = str(self.function)
+        parameter = str(self.parameter)
+
+        msg = "\nError!: Parameter {} is invalid in <Function: {}>\n".format(parameter, function)
+        return msg
+    
+
 
 class ErrorMessage(Exception):
     """Custom Error messages for built in Exceptions"""

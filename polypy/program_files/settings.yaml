@@ -1,10 +1,12 @@
 ---
 
+
+
 static: 
   api_key: "Bearer "
-  request_rate: 15 #seconds
+  request_rate: 15 # measured in seconds
 
 preferences: 
-  verbose?: true
+  verbose? = true 
   
 

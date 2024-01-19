@@ -101,3 +101,5 @@ def test_pagination(endpoint_yaml: str) -> None:
                 print("No more pages to get, terminating pagination stream!")
                 break
     return
+
+## == powerful data harvesting in under 100 lines of code! Thanks for checking out the project
