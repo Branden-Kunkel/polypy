@@ -3,33 +3,28 @@ from datetime import datetime
 import exceptions.exceptions as AuthEx
 
 
-def validate_parameters_exist(*params) -> bool: 
-    '''Returns a boolean denoting status of conditional check and the parameter at fault given a False return value'''
-    if params == None:
-        return False
-    else:
-        for arg in params:
-            if arg == None:
-                return False 
-            else:
-                continue
+def validate_parameters_exist(*args) -> bool: 
+    '''Returns True if *params have values or False is a given argument's value is None'''
+
+    for arg in args:
+        if arg == None:
+            return False
+        else:
+            continue
     return True
     
 
-def validate_parameters_type(exp_type: type, *params ) -> bool:
-    '''Returns a boolean denoting status of conditional check and the parameter at fault given a False return value'''
 
-    if params == None:
-        return False
-    else:
-        for arg in params:
-            if arg == None:
-                pass
-            elif type(arg) == exp_type:
-                continue
-            else:
-                return False
+def validate_parameters_type(exp_type: type, *args ) -> bool|type:
+    '''Returns True if *params are of exp_type or the argument type that failes the check'''
+
+    for arg in args:
+        if type(arg) == exp_type:
+            continue
+        else:
+            return type(arg)
     return True
+
 
 
 def unix_to_date(unix_timestamp: int) -> str:
@@ -110,38 +105,28 @@ def file_paths() -> dict:
         return None
     
 
-def verbose(method: str, obj_in_question: str, object_from: str, fp_to = str) -> None:
+def verbose(console_message: str) -> None:
     '''For printing verbose program actions'''
 
-    try:
+    set_att = settings()
+    is_verbose = set_att["preferences"]["verbose?"]
 
-        methods_list = ["get", "write", "sort"]
+    ensure_values_exist = validate_parameters_exist(is_verbose)
+    ensure_bool_type = validate_parameters_type(bool, is_verbose)
 
-        if validate_parameters_exist(method, obj_in_question, object_from) == True:
-            if validate_parameters_type(str, method, obj_in_question, object_from) == True:
-                if method in methods_list:
-                    if method == methods_list[0]:
-                        print("\nGetting {} from {}.\n".format(obj_in_question, object_from))
-                        return
-                    elif method == methods_list[1]:
-                        print("\nWriting {} from {} to {}.\n".format(obj_in_question, object_from, fp_to))
-                        return
-                    else:
-                        print("\nSorting {} from {}.\n".format(obj_in_question, object_from))
-                        return
-                else:
-                    raise AuthEx.InvalidParameter(method, verbose.__name__)
-            else:
-                raise AuthEx.InvalidParameterType("None", str, verbose.__name__)
-        else:
-            raise AuthEx.EmptyParameter(verbose.__name__)
-
-    except AuthEx.InvalidParameter as err:
-        print(err.error_msg())
-        return 
-    except AuthEx.InvalidParameterType as err:
-        print(err.error_msg())
+    if ensure_values_exist == True:
+        pass
+    else:
+        print(AuthEx.ErrorMessage.settings_file_err)
+        raise AuthEx.EmptyParameter(verbose.__name__)
+    if ensure_bool_type == True:
+        pass
+    else:
+        print(AuthEx.ErrorMessage.settings_file_err)
+        raise AuthEx.InvalidParameterType(ensure_bool_type, bool, verbose.__name__)
+    
+    if is_verbose == True:
+        print(console_message)
         return
-    except AuthEx.EmptyParameter as err:
-        print(err.error_msg())
+    else:
         return

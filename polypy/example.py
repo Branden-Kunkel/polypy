@@ -4,11 +4,11 @@
 #import needed libraries
 import data_access
 import time
+import toolkit
 
 # initialize classes from the data_access module
 api_access = data_access.GetApiData()
 export_api = data_access.ExportApiData()
-tools = data_access.DataAccessToolkit()
 
 # declaring some static global variables for storing parameters
 export_file_path = "" 
@@ -19,9 +19,9 @@ options_ticker = ""
 base_url = ""
 
 # generating the respective parameters into a python dict via library functions
-settings = tools.settings()
-req_params = tools.req_params()
-file_paths = tools.file_paths()
+settings = toolkit.settings()
+req_params = toolkit.req_params()
+file_paths = toolkit.file_paths()
 
 # loading the required values into the global variables using the generated python dict
 export_file_path = file_paths["api_files"]["api_export"]

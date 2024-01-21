@@ -15,7 +15,7 @@ class RequestStatusCodeError(Exception):
 
 
 class NoDataInResponse(Exception):
-    """handles no aggregate data from an API response"""
+    """handles no data from an API response"""
     
     def __init__(self, request_url, function):
         self.request_url = request_url
@@ -40,41 +40,41 @@ class EmptyParameter(Exception):
 
         function = str(self.function)
 
-        msg = "\nError!: Missing required program parameter in <Function: {}>\n".format(function)
+        msg = "\nError!: A parameter in <Function>: {}> had a value of None.\n".format(function)
         return msg
+
 
 
 class InvalidParameterType(Exception):
     """handles recieving a parameter with a type that was unexpected"""
 
-    def __init__(self, parameter, expected_type: type, function):
-        self.parameter = parameter
-        self.type = expected_type
+    def __init__(self, parameter_type: type, expected_type: type, function):
+        self.type = parameter_type
+        self._exp_type = expected_type
         self.function = function
 
     def error_msg(self):
-        parameter_type = str(type(self.parameter))
-        parameter = str(self.parameter)
+
+        got_type = self.type
         expected_type = self.type
         function = str(self.function)
 
-        msg = "Error!: Expected a {} type parameter, got a {} type instead in <Function: {}> | <Parameter: {}>\nTip: ALL parameters in'request_parameters.yaml should be of <class 'str'> type.\n".format(expected_type, parameter_type, function, parameter)
+        msg = "Error!: Expected a {} type parameter, got a {} type instead in <Function: {}>\n".format(expected_type, got_type, function)
         return msg
     
+
 
 class InvalidParameter(Exception):
     """Handles parameters that are invalid for another reason other than type or existence"""
 
-    def __init__(self, parameter, function):
-        self.parameter = parameter
+    def __init__(self, function):
         self.function = function
 
     def error_msg(self):
 
         function = str(self.function)
-        parameter = str(self.parameter)
 
-        msg = "\nError!: Parameter {} is invalid in <Function: {}>\n".format(parameter, function)
+        msg = "\nError!: Invalid parameter in <Function: {}>\n".format(function)
         return msg
     
 
@@ -82,4 +82,8 @@ class InvalidParameter(Exception):
 class ErrorMessage(Exception):
     """Custom Error messages for built in Exceptions"""
 
-    not_dict_type = "Error!: Expected parameters wrapped in a <dict> object, got a different type instead."
+    req_params_yaml_err = "\nError occured in 'request_parameters.yaml':"
+    
+    file_paths_yaml_err = "\nError occured in 'file_paths.yaml':"
+
+    settings_file_err = "\nError occured in 'settings.yaml':"

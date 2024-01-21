@@ -2,7 +2,7 @@
 
 api_files: 
   request_parameters: "/path/to/request_parameters.yaml"
-  api_export: "/path/to/your/chosen/writefile/directory/" ## leave trailing slash
+  api_export: "/path/to/directory/for/file/writing/" ## leave trailing slash
 
 program_files:
   settings: "/path/to/settings.yaml"
