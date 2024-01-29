@@ -18,7 +18,7 @@ ticker = ""
 options_ticker = ""
 base_url = ""
 
-# generating the respective parameters into a python dict via library functions
+# generating the program parameters into python dictionaries via library functions
 settings = toolkit.settings()
 req_params = toolkit.req_params()
 file_paths = toolkit.file_paths()
@@ -27,21 +27,13 @@ file_paths = toolkit.file_paths()
 export_file_path = file_paths["api_files"]["api_export"]
 api_key = settings["static"]["api_key"]
 interval_time = settings["static"]["request_rate"]
-dat = req_params['asset_parameters']["date"]
-ticker = req_params["asset_parameters"]["ticker"]
-options_ticker = req_params["asset_parameters"]["options_ticker"]
 
 # function to test a basic implementation of the program. This will make one request and then write the sorted response to a .yaml AND a .json file
-def test(endpoint_yaml) -> None:
+def test(endpoint_yaml: str) -> None:
     '''Just a test'''
-    # dynamic parameter allocation with our generated dictionaries
-    parameters = req_params[endpoint_yaml]["parameters"]
-    base_url = req_params[endpoint_yaml]["url"]
-
     # create request url, make the request and then sort/stamp the response object in that order
-    # Modules make a good one liner easy!
     # Can easily make the next three lines a one-liner 
-    url = api_access.generate_request_url2(base_url, options_ticker, ticker, date, parameters)
+    url = api_access.generate_request_url2(endpoint_yaml)
     api_data = api_access.request_data(url, api_key)
     sorted_data = export_api.sort_api_data(api_data, url)
 
@@ -54,11 +46,8 @@ def test(endpoint_yaml) -> None:
 def test_pagination(endpoint_yaml: str) -> None:
     '''Just a test'''
 
-    parameters = req_params[endpoint_yaml]["parameters"]
     file_series_id = "test"
     loop = True
-
-    base_url = req_params[endpoint_yaml]["url"]
 
     print("Accessing initial API call...")
 
@@ -68,7 +57,7 @@ def test_pagination(endpoint_yaml: str) -> None:
     primary_url = ""
     file_name = "{}{}".format(file_series_id, str(file_count))
 
-    primary_url = api_access.generate_request_url2(base_url, options_ticker, ticker, date, parameters)
+    primary_url = api_access.generate_request_url2(endpoint_yaml)
     api_data = api_access.request_data(primary_url, api_key)
     sorted_data = export_api.sort_api_data(api_data, primary_url)
 

@@ -12,28 +12,70 @@ import toolkit
 class GetApiData():
     """class serves as an engine to access API data"""
 
-    def generate_request_url2(self, base_url: str, options_ticker: str, ticker: str, date: str, request_parameters: dict) -> str:
-        '''Generates and properly formats a request url for 'polygon.io' given parameters in configuration file'''
+    def generate_request_url2(self, endpoint: str, options_ticker: str=None, ticker: str=None, date: str=None) -> str:
+        '''Returns a properly formatted request url for 'polygon.io:
+           - endpoint: str -> Needs to be the name of an endpoint listed in 'request_parameters.yaml
+           - options_ticker, ticker, date: str -> If not supplied, function will use defaults from request_parameters.yaml  
+        '''
 
         try:
-            ensure_value_exists = toolkit.validate_parameters_exist(base_url, options_ticker, ticker, date, request_parameters) 
-            ensure_str_value = toolkit.validate_parameters_type(str, base_url, options_ticker, ticker, date)
-            ensure_dict_value = toolkit.validate_parameters_type(dict, request_parameters)
+
+            opt_tick = options_ticker
+            stock_ticker = ticker
+            day = date
+
+            req_param_yaml = toolkit.req_params()
+            request_parameters = dict(req_param_yaml[endpoint]["parameters"])
+            endpoint_url = req_param_yaml[endpoint]["url"]
+
+            default_opt_tick = req_param_yaml["asset_parameters"]["options_ticker"]
+            default_stock_tick = req_param_yaml["asset_parameters"]["ticker"]
+            default_date = req_param_yaml["asset_parameters"]["date"]
 
             toolkit.verbose("Validating parameters for {}...".format(self.generate_request_url2.__name__))
 
-            if ensure_value_exists == True:
+            ensure_end_exist = toolkit.validate_parameters_exist(endpoint)
+            ensure_end_str = toolkit.validate_parameters_type(str, endpoint)
+            ensure_defaults_exist = toolkit.validate_parameters_exist(default_opt_tick, default_stock_tick, default_date)
+            ensure_default_types = toolkit.validate_parameters_type(str, default_opt_tick, default_stock_tick, default_date)
+            
+
+            if ensure_end_exist == True:
                 pass
             else:
                 raise AuthEx.EmptyParameter(self.generate_request_url2.__name__)
-            if ensure_str_value == True:
-                pass 
-            else:
-                raise AuthEx.InvalidParameterType(ensure_str_value, str)
-            if ensure_dict_value == True:
+            if ensure_end_str == True:
                 pass
             else:
-                raise AuthEx.InvalidParameterType(ensure_dict_value, dict)
+                raise AuthEx.InvalidParameterType(ensure_end_str, str, self.generate_request_url2.__name__)
+            if ensure_defaults_exist == True:
+                pass
+            else:
+                print(AuthEx.ErrorMessage.req_params_yaml_err)
+                raise AuthEx.EmptyParameter(self.generate_request_url2.__name__)
+            if ensure_default_types == True:
+                pass
+            else:
+                print(AuthEx.ErrorMessage.req_params_yaml_err)
+                raise AuthEx.InvalidParameterType(ensure_default_types, str, self.generate_request_url2.__name__)
+            
+            if toolkit.validate_parameters_exist(opt_tick) == True:
+                pass
+            else:
+                opt_tick = default_opt_tick
+            if toolkit.validate_parameters_exist(stock_ticker) == True:
+                pass
+            else:
+                stock_ticker = default_stock_tick
+            if toolkit.validate_parameters_exist(day) == True:
+                pass
+            else:
+                day = default_date
+            if toolkit.validate_parameters_type(str, opt_tick, stock_ticker, day) == True:
+                print("HERE")
+                pass
+            else:
+                raise AuthEx.InvalidParameterType(toolkit.validate_parameters_type(str, opt_tick, stock_ticker, day), str, self.generate_request_url2.__name__)
             
             toolkit.verbose("OK!\n")
 
@@ -41,9 +83,9 @@ class GetApiData():
             options_ticker_regex = re.compile("(?<=/)\{(?:optionsTicker)\}")
             ticker_regex = re.compile("(?<=/)\{(?:ticker)\}")
 
-            url_buffer = re.sub(date_regex, date, base_url)
-            url_buffer2 = re.sub(options_ticker_regex, options_ticker, url_buffer)
-            url_buffer3 = re.sub(ticker_regex, ticker, url_buffer2)
+            url_buffer = re.sub(date_regex, day, endpoint_url)
+            url_buffer2 = re.sub(options_ticker_regex, opt_tick, url_buffer)
+            url_buffer3 = re.sub(ticker_regex, stock_ticker, url_buffer2)
 
             parameters_list = []
             endpoint_string = ""
@@ -84,7 +126,10 @@ class GetApiData():
             
 
     def request_data(self, url: str, api_key: str) -> dict:
-        '''Makes a 'GET' API request to polygon.io'''
+        '''Makes a 'GET' API request to polygon.io and returns the response:
+           - url: str -> Formatted endpoint request url. Use the 'generate_request_url2()' return value!
+           - api_key: str -> Import from 'settings.yaml' . Try using the 'settings()' function from toolkit.py 
+        '''
 
         try:
             ensure_value_exists = toolkit.validate_parameters_exist(url, api_key)
@@ -136,7 +181,10 @@ class ExportApiData():
     """class serves as an engine to export api data"""
 
     def sort_api_data(self, data_object: dict, request_url: str) -> dict:
-        '''changes certain values to be human readable and adds program stamp(s) to an API response from polygon.io'''
+        '''changes certain values to be human readable and adds program stamp(s) to an API response from polygon.io:
+           - date_object: dict -> Give the raw response from 'request_data()'
+           - request_url: str -> Will stamp 'request_url' into the raw response. Encouraged to enter the url/endpoint from which you recieved the response. Can use 'generate_request_url2()' as the value 
+        '''
         try:
             ensure_values_exist = toolkit.validate_parameters_exist(data_object, request_url)
             ensure_str_type = toolkit.validate_parameters_type(str, request_url)
@@ -199,13 +247,15 @@ class ExportApiData():
 
 
 
-    def write_yaml(self, write_file_dir: str, data_object: dict, filename: str) -> None:
+    def write_yaml(self, data_object: dict, filename: str, write_file_dir: str=None) -> None:
         '''Writes a dictionary data object (ex. api response) to a .yaml file'''
 
         try:        
-            ensure_values_exist = toolkit.validate_parameters_exist(write_file_dir, data_object, filename)
-            ensure_str_type = toolkit.validate_parameters_type(str, write_file_dir, filename)
+            ensure_values_exist = toolkit.validate_parameters_exist(data_object, filename)
+            ensure_str_type = toolkit.validate_parameters_type(str, filename)
             ensure_dict_type = toolkit.validate_parameters_type(dict, data_object)
+
+            write_directory = write_file_dir
 
             toolkit.verbose("Validating parameters for {}...".format(self.write_yaml.__name__))
 
@@ -222,6 +272,20 @@ class ExportApiData():
             else:
                 raise AuthEx.InvalidParameterType(ensure_dict_type, dict, self.write_yaml.__name__)
             
+            if toolkit.validate_parameters_exist(write_directory) == True:
+                if toolkit.validate_parameters_type(str, write_directory) == True:
+                    pass
+                else:
+                    raise AuthEx.InvalidParameterType(toolkit.validate_parameters_type(str, write_directory), str, self.write_yaml.__name__)
+            else:
+                file_paths = toolkit.file_paths()
+                write_directory = file_paths["api_files"]["api_export"]
+                if toolkit.validate_parameters_type(str, write_directory) == True:
+                    pass
+                else:
+                    print(AuthEx.ErrorMessage.file_paths_yaml_err)
+                    raise AuthEx.InvalidParameterType(toolkit.validate_parameters_type(str, write_directory), str, self.write_yaml.__name__)
+
             toolkit.verbose("OK!\n")
             toolkit.verbose("Validating file extension...")
 
@@ -237,7 +301,6 @@ class ExportApiData():
 
             toolkit.verbose("OK!\n")
 
-            write_directory = write_file_dir
             full_path = write_directory + filename
 
             toolkit.verbose("Opening {} for writing...".format(full_path))
@@ -268,6 +331,8 @@ class ExportApiData():
             ensure_str_type = toolkit.validate_parameters_type(str, write_file_dir, filename)
             ensure_dict_type = toolkit.validate_parameters_type(dict, data_object)
 
+            write_directory = write_file_dir
+
             toolkit.verbose("Validating parameters for {}...".format(self.write_json.__name__))
 
             if ensure_values_exist == True:
@@ -282,6 +347,20 @@ class ExportApiData():
                 pass
             else:
                 raise AuthEx.InvalidParameterType(ensure_dict_type, dict, self.write_json.__name__)
+            
+            if toolkit.validate_parameters_exist(write_directory) == True:
+                if toolkit.validate_parameters_type(str, write_directory) == True:
+                    pass
+                else:
+                    raise AuthEx.InvalidParameterType(toolkit.validate_parameters_type(str, write_directory), str, self.write_json.__name__)
+            else:
+                file_paths = toolkit.file_paths()
+                write_directory = file_paths["api_files"]["api_export"]
+                if toolkit.validate_parameters_type(str, write_directory) == True:
+                    pass
+                else:
+                    print(AuthEx.ErrorMessage.file_paths_yaml_err)
+                    raise AuthEx.InvalidParameterType(toolkit.validate_parameters_type(str, write_directory), str, self.write_json.__name__)
 
             toolkit.verbose("OK!\n")
             toolkit.verbose("Validating file extension...")
@@ -298,7 +377,6 @@ class ExportApiData():
 
             toolkit.verbose("OK!\n")
 
-            write_directory = write_file_dir
             full_path = write_directory + filename
 
             toolkit.verbose("Opening {} for writing...".format(full_path))

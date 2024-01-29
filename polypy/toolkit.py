@@ -28,6 +28,8 @@ def validate_parameters_type(exp_type: type, *args ) -> bool|type:
 
 
 def unix_to_date(unix_timestamp: int) -> str:
+    '''Converts a Unix timestampt to a human readable datetime'''
+
     try:
         if validate_parameters_exist(unix_timestamp) == True:
             if validate_parameters_type(int, unix_timestamp) == True: 
@@ -106,7 +108,9 @@ def file_paths() -> dict:
     
 
 def verbose(console_message: str) -> None:
-    '''For printing verbose program actions'''
+    '''For printing verbose program actions:
+       - console_message: str -> The message desired to print 
+    '''
 
     set_att = settings()
     is_verbose = set_att["preferences"]["verbose?"]
