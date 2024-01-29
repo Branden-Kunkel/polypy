@@ -38,8 +38,8 @@ def test(endpoint_yaml: str) -> None:
     sorted_data = export_api.sort_api_data(api_data, url)
 
     # write data to .yaml and .json respectively
-    export_api.write_yaml(export_file_path, sorted_data, "test.yaml")
-    export_api.write_json(export_file_path, sorted_data, "test.json")
+    export_api.write_yaml(sorted_data, "test.yaml", export_file_path)
+    export_api.write_json(sorted_data, "test.json", export_file_path)
     return
 
 # A more advanced example of how we can use pagination to automatically gather large amounts of data
@@ -63,10 +63,11 @@ def test_pagination(endpoint_yaml: str) -> None:
 
     print("Writing data to {}...".format(file_name))
 
-    export_api.write_yaml(export_file_path, sorted_data, file_name)
+    export_api.write_yaml(sorted_data, file_name, export_file_path)
     file_count += 1
 
     print("Done.")
+    
     time.sleep(interval_time)
     
     while loop == True:
@@ -80,15 +81,17 @@ def test_pagination(endpoint_yaml: str) -> None:
                 api_data = api_access.request_data(next_page_url, api_key)
                 data_sorted = export_api.sort_api_data(api_data, page_url_stamp)
                 print("Writing data to {}...".format(file_name))
-                export_api.write_yaml(export_file_path, data_sorted, file_name)
+                export_api.write_yaml(data_sorted, file_name, export_file_path)
                 file_count += 1
                 print("Done.")
                 time.sleep(interval_time)
             elif key != "next_url":
-                pass
-            else:
-                print("No more pages to get, terminating pagination stream!")
+                print("Not")
+                continue
+            else: 
+                print("pass")
                 break
+                
     return
 
 ## == powerful data harvesting in under 100 lines of code! Thanks for checking out the project

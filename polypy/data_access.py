@@ -72,7 +72,6 @@ class GetApiData():
             else:
                 day = default_date
             if toolkit.validate_parameters_type(str, opt_tick, stock_ticker, day) == True:
-                print("HERE")
                 pass
             else:
                 raise AuthEx.InvalidParameterType(toolkit.validate_parameters_type(str, opt_tick, stock_ticker, day), str, self.generate_request_url2.__name__)
@@ -323,7 +322,7 @@ class ExportApiData():
         
         
 
-    def write_json(self, write_file_dir: str, data_object: dict, filename: str) -> None:
+    def write_json(self, data_object: dict, filename: str, write_file_dir: str=None) -> None:
         '''Writes a dictionary data object (api response)to a .json file'''
 
         try:        
