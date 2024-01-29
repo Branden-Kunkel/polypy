@@ -1,7 +1,9 @@
 __Notes for 'polypy' repo__
 
-- Recently reminded myself that there is no error handling for a situation in which the program files are not .yaml. -> fix that
+- To justify putting program in beta:
+    1. Write unit test and pass it!
+    2. Lint python files
+    3. Add all available api endpoints for polygon.io
 
-- First goal after unit testing should be to add any remaining api endpoints to the program
+- Program has internally scripted type checks and existence checks
 
-- need to add verbosity to the program as an option -> working on it. Need to add an if statement to guage whether to be verbose or not
