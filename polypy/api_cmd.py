@@ -23,8 +23,8 @@ class TestCmdInterface(cmd.Cmd):
                      "macd - moving average convergence/divergence"
                      "cwd - get the program's current working directory",
                     ]
-        print("\nType keyword > Enter to test api endpoint. Customize request parameters in request_parameters.yaml!")
-        print("     To paginate over the desired endpoint's data, type the command - '[keyword] -p'")
+        print("\nType command > ENTER to test api endpoint. Customize request parameters in request_parameters.yaml!")
+        print("     To paginate over the desired endpoint's data, type - '[command] -p > ENTER'")
         print("\n" + "KEYWORDS: " + "\n")
         for keyword in keywords:
             print(keyword)
@@ -97,5 +97,6 @@ class TestCmdInterface(cmd.Cmd):
 
     
 cli = TestCmdInterface()
+print("For help with commands, type - 'help' > ENTER")
 cli.cmdloop()
 
