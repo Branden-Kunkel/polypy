@@ -124,13 +124,16 @@ class GetApiData():
             return None
             
 
-    def request_data(self, url: str, api_key: str) -> dict:
+    def request_data(self, url: str) -> dict:
         '''Makes a 'GET' API request to polygon.io and returns the response:
-           - url: str -> Formatted endpoint request url. Use the 'generate_request_url2()' return value!
-           - api_key: str -> Import from 'settings.yaml' . Try using the 'settings()' function from toolkit.py 
+           - url: str -> Formatted endpoint request url. Use the 'generate_request_url2()' return value! 
         '''
 
         try:
+
+            settings = toolkit.settings()
+            api_key = settings["static"]["api_key"]
+
             ensure_value_exists = toolkit.validate_parameters_exist(url, api_key)
             ensure_str_type = toolkit.validate_parameters_type(str, url, api_key)
 
@@ -144,6 +147,7 @@ class GetApiData():
                 pass
             else:
                 raise AuthEx.InvalidParameterType(ensure_str_type, str, self.request_data.__name__)
+            
             
             toolkit.verbose("OK!\n")
             
@@ -179,14 +183,14 @@ class GetApiData():
 class ExportApiData():
     """class serves as an engine to export api data"""
 
-    def sort_api_data(self, data_object: dict, request_url: str) -> dict:
+    def sort_api_data(self, data_object: dict, request_url_stamp: str) -> dict:
         '''changes certain values to be human readable and adds program stamp(s) to an API response from polygon.io:
            - date_object: dict -> Give the raw response from 'request_data()'
-           - request_url: str -> Will stamp 'request_url' into the raw response. Encouraged to enter the url/endpoint from which you recieved the response. Can use 'generate_request_url2()' as the value 
+           - request_url: str -> Will stamp 'request_url' into the raw response. Encouraged to enter the url/endpoint from which you recieved the response. Can use 'generate_request_url2()' as the value. 
         '''
         try:
-            ensure_values_exist = toolkit.validate_parameters_exist(data_object, request_url)
-            ensure_str_type = toolkit.validate_parameters_type(str, request_url)
+            ensure_values_exist = toolkit.validate_parameters_exist(data_object, request_url_stamp)
+            ensure_str_type = toolkit.validate_parameters_type(str, request_url_stamp)
             ensure_dict_type = toolkit.validate_parameters_type(dict, data_object)
 
             toolkit.verbose("Validating parameters for {}...".format(self.sort_api_data.__name__))
@@ -214,7 +218,7 @@ class ExportApiData():
 
             data.update({"auto": {}})
             data["auto"]["auto_timestamp"] = timestamp 
-            data["auto"]["auto_url"] = request_url 
+            data["auto"]["auto_url"] = request_url_stamp 
 
             values_dict = data["results"]["values"]
 
@@ -326,8 +330,8 @@ class ExportApiData():
         '''Writes a dictionary data object (api response)to a .json file'''
 
         try:        
-            ensure_values_exist = toolkit.validate_parameters_exist(write_file_dir, data_object, filename)
-            ensure_str_type = toolkit.validate_parameters_type(str, write_file_dir, filename)
+            ensure_values_exist = toolkit.validate_parameters_exist(data_object, filename)
+            ensure_str_type = toolkit.validate_parameters_type(str, filename)
             ensure_dict_type = toolkit.validate_parameters_type(dict, data_object)
 
             write_directory = write_file_dir
