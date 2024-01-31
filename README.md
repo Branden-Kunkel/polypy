@@ -91,32 +91,30 @@ The full function list for the `toolkit.py` module is as follows:
            - options_ticker, ticker, date: str -> If not supplied, function will use defaults from request_parameters.yaml  
         '''
         + endpoint: str -> A string with the name of the endpoint in **request_parameters.yaml**, which we just looked over. Ex. "simple_moving_average"
-        + options_ticker, ticker, date: str -> Arguments should be strings representing target infromation for making a request. All three values are required. However, if none are supplied to the function as arguments, then defaults from 'request_parameters.yaml' will be used. If no values are present there either, then an error may result depending on what endpoint you are requesting data from.
+        + options_ticker, ticker, date: str -> Arguments should be strings representing target infromation for making a request. All three values are required. However, if none are supplied to the function as arguments, then defaults from 'request_parameters.yaml' will be used. If no values are present there either, then an error may result depending on what endpoint you are requesting data from. This is due to the regular expression engine within the function.
 
-    + `def request_data(self, url: str, api_key: str) -> dict`:
+    + `def request_data(self, url: str) -> dict`:
         '''Makes a 'GET' API request to polygon.io and returns the response:
-           - url: str -> Formatted endpoint request url. Use the 'generate_request_url2()' return value!
-           - api_key: str -> Import from 'settings.yaml' . Try using the 'settings()' function from toolkit.py 
+           - url: str -> Formatted endpoint request url. Use the 'generate_request_url2()' return value! 
         '''
         + url: str -> Needs to be a properly formatted api endpoint url. Simply use **generate_request_url2()** return value.
-        + api_key: str -> api key from 'settings.yaml'
 
     NOTE: An example of implementing these functions can be found in `example.py` of this module's working directory! You can try out the simple implementation by running the `api_cmd.py` file.
 
     
     The **ExportApiData** class contains methods for organizing and exporting an api response to a file.
 
-    + `def sort_api_data(self, data_object: dict, request_url: str) -> dict`:
+    + `def sort_api_data(self, data_object: dict, request_url_stamp: str) -> dict`:
         '''changes certain values to be human readable and adds program stamp(s) to an API response from polygon.io:
            - date_object: dict -> Give the raw response from 'request_data()'
-           - request_url: str -> Will stamp 'request_url' into the raw response. Encouraged to enter the url/endpoint from which you recieved the response. Can use 'generate_request_url2()' as the value
+           - request_url_stamp: str -> Will stamp 'request_url' into the raw response. Encouraged to enter the url/endpoint from which you recieved the response. Can use 'generate_request_url2()' as the value
         '''
-    + `def write_yaml(data_object: dict, filename: str, write_file_dir: str) -> None:`
+    + `def write_yaml(data_object: dict, filename: str, write_file_dir: str=None) -> None:`
         '''Writes a dictionary data object (ex. api response) to a .yaml file'''
         + data_object: dict -> A data dictionary to write to a file. Can use a raw response, but would reccomend using the return value from **sort_api_data()**
         + filename: str -> A string for the filename you wish to use. This function fixes improper file extensions (including no file extension)
         + write_file_dir: str=None -> Optional parameter, which should be a string notating the directory to write the file into. Defaults to _api_export_ in 'file_paths.yaml' if no argument is given
-    + `def write_json(data_object: dict, filename: str, write_file_dir: str) -> None:`
+    + `def write_json(data_object: dict, filename: str, write_file_dir: str=None) -> None:`
         '''Writes a dictionary data object (api response)to a .json file'''
         + data_object: dict -> A data dictionary to write to a file. Can use a raw response, but would reccomend using the return value from **sort_api_data()**
         + filename: str -> A string for the filename you wish to use. This function fixes improper file extensions (including no file extension)

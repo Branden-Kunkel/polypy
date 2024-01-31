@@ -186,7 +186,7 @@ class ExportApiData():
     def sort_api_data(self, data_object: dict, request_url_stamp: str) -> dict:
         '''changes certain values to be human readable and adds program stamp(s) to an API response from polygon.io:
            - date_object: dict -> Give the raw response from 'request_data()'
-           - request_url: str -> Will stamp 'request_url' into the raw response. Encouraged to enter the url/endpoint from which you recieved the response. Can use 'generate_request_url2()' as the value. 
+           - request_url_stamp: str -> Will stamp 'request_url' into the raw response. Encouraged to enter the url/endpoint from which you recieved the response. Can use 'generate_request_url2()' as the value.
         '''
         try:
             ensure_values_exist = toolkit.validate_parameters_exist(data_object, request_url_stamp)
